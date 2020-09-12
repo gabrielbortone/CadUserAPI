@@ -110,7 +110,7 @@ namespace CadUserAPI.Application.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(Guid id, [FromBody] UsuarioDTO usuarioDTO)
         {
-            if (id != usuarioDTO.UserId)
+            if (id != usuarioDTO.Id)
             {
                 MensagemDTO message = new MensagemDTO("Erro na alteração: ids diferentes!");
                 return BadRequest(message);
@@ -152,7 +152,7 @@ namespace CadUserAPI.Application.Controllers
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Jti, userInfo.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, userInfo.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.Email)
             };
 

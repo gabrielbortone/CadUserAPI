@@ -1,5 +1,4 @@
-﻿using AutoMapper.Configuration;
-using CadUserAPI.ApplicationCore.Context;
+﻿using CadUserAPI.ApplicationCore.Context;
 using CadUserAPI.ApplicationCore.Models;
 using CadUserAPI.ApplicationCore.Repositories.Interfaces;
 using Dapper;
@@ -36,7 +35,7 @@ namespace CadUserAPI.ApplicationCore.Repositories
 
         public async Task<IEnumerable<Usuario>> GetAllAsync()
         {
-            var sql = "SELECT * FROM dbo.AspNetUsers";
+            var sql = @"SELECT * FROM dbo.AspNetUsers";
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -47,7 +46,7 @@ namespace CadUserAPI.ApplicationCore.Repositories
 
         public async Task<Usuario> GetAsync(dynamic id)
         {
-            var sql = "SELECT * FROM dbo.AspNetUsers WHERE UserId = @Id";
+            var sql = @"SELECT * FROM dbo.AspNetUsers WHERE UserId = @Id";
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -65,7 +64,7 @@ namespace CadUserAPI.ApplicationCore.Repositories
 
         public async Task<Usuario> GetByEmailAsync(string email)
         {
-            var sql = "SELECT * FROM dbo.AspNetUsers WHERE Email = @Email";
+            var sql = @"SELECT * FROM dbo.AspNetUsers WHERE Email = @Email";
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -76,7 +75,7 @@ namespace CadUserAPI.ApplicationCore.Repositories
 
         public async Task<Usuario> GetByToken(string token)
         {
-            var sql = "SELECT * FROM dbo.AspNetUsers WHERE Last_Token = @Token";
+            var sql = @"SELECT * FROM dbo.AspNetUsers WHERE Last_Token = @Token";
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();

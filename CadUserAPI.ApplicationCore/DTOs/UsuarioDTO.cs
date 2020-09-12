@@ -6,7 +6,7 @@ namespace CadUserAPI.ApplicationCore.DTOs
 {
     public class UsuarioDTO
     {
-        public Guid UserId { get; }
+        public Guid Id { get; }
         public string Name { get; }
         public DateTime Created { get; }
         public DateTime Modified { get; }
