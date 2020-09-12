@@ -8,7 +8,6 @@ namespace CadUserAPI.ApplicationCore.DTOs.MappingProfile
         public MappingProfile()
         {
             CreateMap<Usuario, UsuarioDTO>().ReverseMap();
-            CreateMap<Phone, PhoneDTO>().ReverseMap();
         }
     }
 }

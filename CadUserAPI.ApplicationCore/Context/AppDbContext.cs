@@ -6,20 +6,10 @@ namespace CadUserAPI.ApplicationCore.Context
 {
     public class AppDbContext : IdentityDbContext<Usuario>
     {
-        public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Phone> Phones { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            optionsBuilder.UseInMemoryDatabase("CadUserDb");
-        }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Usuario>()
-                .HasMany(user => user.Phones)
-                .WithOne(phone => phone.Usuario);
         }
     }
 }

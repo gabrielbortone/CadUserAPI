@@ -11,6 +11,6 @@ namespace CadUserAPI.ApplicationCore.DTOs
         public DateTime Created { get; }
         public DateTime Modified { get; }
         public DateTime Last_Login { get; set; }
-        public IEnumerable<PhoneDTO> Phones { get; set; }
+        public PhoneDTO Phone { get; set; }
     }
 }

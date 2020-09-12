@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadUserAPI.Application", "CadUserAPI\CadUserAPI.Application.csproj", "{15988696-4834-49A8-948D-58E4C5A24CE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadUserAPI", "CadUserAPI\CadUserAPI.csproj", "{15988696-4834-49A8-948D-58E4C5A24CE0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadUserAPI.Tests", "CadUserAPI.Tests\CadUserAPI.Tests.csproj", "{34636DEA-524F-4C84-B427-FC2C80AFA487}"
 EndProject

@@ -2,7 +2,7 @@
 
 namespace CadUserAPI.ApplicationCore.DTOs
 {
-    public class UsuarioToken
+    public class UsuarioTokenDTO
     {
         public UsuarioDTO User { get; set; }
         public bool Authenticated { get; set; }

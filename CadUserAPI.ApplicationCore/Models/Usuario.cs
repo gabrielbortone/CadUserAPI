@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace CadUserAPI.ApplicationCore.Models
 {
@@ -14,32 +12,38 @@ namespace CadUserAPI.ApplicationCore.Models
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
         public DateTime Last_Login { get; set; }
-        public IEnumerable<Phone> Phones { get; set; }
+        public string Last_Token { get; set; }
+        public string DDD { get; set; }
+        
+
         public Usuario()
         {
             Created = DateTime.Now;
             Modified = DateTime.Now;
             Last_Login = DateTime.Now;
         }
-        public Usuario(string name, string email, IEnumerable<Phone> phones)
+        public Usuario(string name, string email, string ddd, string phone)
         {
             Name = name;
             Email = email;
             Created = DateTime.Now;
             Modified = DateTime.Now;
             Last_Login = DateTime.Now;
-            Phones = phones;
+            DDD = ddd;
+            PhoneNumber = phone;
         }
 
         public Usuario(Guid userId, string name, DateTime created, DateTime modified,
-            DateTime last_Login, IEnumerable<Phone> phones)
+            DateTime last_Login, string email, string ddd, string phone)
         {
             UserId = userId;
             Name = name;
             Created = created;
             Modified = modified;
             Last_Login = last_Login;
-            Phones = phones;
+            Email = email;
+            DDD = ddd;
+            PhoneNumber = phone;
         }
     }
 }
