@@ -5,8 +5,6 @@ namespace CadUserAPI.ApplicationCore.Models
 {
     public class Usuario : IdentityUser<Guid>
     {
-        //[Key]
-        //public Guid UserId { get; set; }
         public string Name { get; set; }
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
@@ -32,10 +30,10 @@ namespace CadUserAPI.ApplicationCore.Models
             PhoneNumber = phone;
         }
 
-        public Usuario(Guid userId, string name, DateTime created, DateTime modified,
+        public Usuario(Guid id, string name, DateTime created, DateTime modified,
             DateTime last_Login, string email, string ddd, string phone)
         {
-            Id = userId;
+            Id = id;
             Name = name;
             Created = created;
             Modified = modified;

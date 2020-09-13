@@ -87,6 +87,7 @@ namespace CadUserAPI.ApplicationCore.Repositories
         public async Task UpdateToken(Usuario usuario, string token)
         {
             usuario.Last_Token = token;
+            usuario.Last_Login = DateTime.Now;
             await UpdateAsync(usuario);
         }
     }

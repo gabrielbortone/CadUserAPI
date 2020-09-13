@@ -27,7 +27,6 @@ namespace CadUserAPI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -41,13 +40,16 @@ namespace CadUserAPI
             services.AddSingleton(mapper);
 
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
+                options.EnableSensitiveDataLogging()
+                .UseSqlServer(Configuration.GetConnectionString("DevConnection"))
+                );
 
             services.AddIdentity<Usuario, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<AppDbContext>()
-                .AddDefaultTokenProviders();
+                 .AddErrorDescriber<PortugueseIdentityErrorDescriber>()
+                 .AddDefaultTokenProviders();
 
-            services.AddTransient<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
             services.AddAuthentication(
                 JwtBearerDefaults.AuthenticationScheme).
@@ -66,7 +68,7 @@ namespace CadUserAPI
             services.AddAuthorization();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
