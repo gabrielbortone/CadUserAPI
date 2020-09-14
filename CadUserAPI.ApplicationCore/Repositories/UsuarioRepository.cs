@@ -46,7 +46,7 @@ namespace CadUserAPI.ApplicationCore.Repositories
 
         public async Task<Usuario> GetAsync(dynamic id)
         {
-            var sql = @"SELECT * FROM dbo.AspNetUsers WHERE UserId = @Id";
+            var sql = @"SELECT * FROM dbo.AspNetUsers WHERE Id = @Id";
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
