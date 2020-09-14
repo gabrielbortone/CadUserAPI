@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace CadUserAPI.Application.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class UsuarioController : ControllerBase
@@ -39,11 +39,11 @@ namespace CadUserAPI.Application.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Usuario>>> Get()
+        public async Task<IActionResult> GetAll()
         {
             var usuarios = await UsuarioRepository.GetAllAsync();
             
-            if (!ValidateToken())
+            if (await IsLoginInvalid())
             {
                 MensagemDTO mensagem = new MensagemDTO("Não autorizado!");
                 return Unauthorized(mensagem);
@@ -60,12 +60,12 @@ namespace CadUserAPI.Application.Controllers
         }
 
 
-        [HttpGet("{id}", Name = "ObterUsuario")]
-        public async Task<ActionResult<UsuarioDTO>> GetAsync(Guid id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAsyncById(Guid id)
         {
             var usuario = await UsuarioRepository.GetAsync(id);
 
-            if (!ValidateToken())
+            if (await IsLoginInvalid())
             {
                 MensagemDTO mensagem = new MensagemDTO("Não autorizado!");
                 return Unauthorized(mensagem);
@@ -73,7 +73,8 @@ namespace CadUserAPI.Application.Controllers
 
             if (usuario == null)
             {
-                return NotFound();
+                MensagemDTO mensagemDTO = new MensagemDTO("Usuário não encontrado!");
+                return NotFound(mensagemDTO);
             }
 
             var usuarioDTO = _mapper.Map<UsuarioDTO>(usuario);
@@ -85,7 +86,7 @@ namespace CadUserAPI.Application.Controllers
         public async Task<IActionResult> Login([FromBody] LoginUserDTO userInfo)
         {
             var user = await _userManager.FindByEmailAsync(userInfo.Email);
-            if (user.Email != null)
+            if (user != null)
             {
                 var result = await _signInManager.PasswordSignInAsync(user.Email,
                 userInfo.Password, isPersistent: false, lockoutOnFailure: false);
@@ -155,7 +156,8 @@ namespace CadUserAPI.Application.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return Ok();
+            MensagemDTO mensagem = new MensagemDTO("Logout com sucesso!");
+            return Ok(mensagem);
         }
 
         [HttpPut("{id}")]
@@ -167,7 +169,7 @@ namespace CadUserAPI.Application.Controllers
                 return BadRequest(message);
             }
 
-            if (!ValidateToken())
+            if (await IsLoginInvalid())
             {
                 MensagemDTO mensagem = new MensagemDTO("Não autorizado!");
                 return Unauthorized(mensagem);
@@ -181,23 +183,25 @@ namespace CadUserAPI.Application.Controllers
             }
             catch (Exception Ex)
             {
-                return BadRequest(Ex.Message);
+                MensagemDTO mensagemDTO = new MensagemDTO(Ex.Message);
+                return BadRequest(mensagemDTO);
             }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            if (!ValidateToken())
+            if (await IsLoginInvalid())
             {
                 MensagemDTO mensagem = new MensagemDTO("Não autorizado!");
                 return Unauthorized(mensagem);
+            }
+
+            if (id == null)
+            {
+                MensagemDTO mensagem = new MensagemDTO
+                    ("Conteúdo não encontrado! Verifique se o id está correto e tente novamente");
+                return NotFound(mensagem);
             }
 
             try
@@ -207,15 +211,40 @@ namespace CadUserAPI.Application.Controllers
             }
             catch (Exception Ex)
             {
-                return BadRequest(Ex.Message);
+                MensagemDTO mensagemDTO = new MensagemDTO(Ex.Message);
+                return BadRequest(mensagemDTO);
             }
         }
 
-        public bool ValidateToken()
+        private async Task<bool> IsLoginInvalid()
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = await UsuarioRepository.GetAsync(userId);
             var accessToken = Request.Headers[HeaderNames.Authorization].ToString();
             var token = accessToken.Substring(7, accessToken.Length - 7);
 
+            if (ValidateToken(token))
+            {
+                if (user.Last_Token == token)
+                {
+                    var ultimoLoginFoiFeitoNoTempo = DateTime.Now
+                        .AddMinutes(-double.Parse(_configuration["TokenConfiguration:ExpireMinutes"])) < user.Last_Login;
+                    return !ultimoLoginFoiFeitoNoTempo;
+                }
+                else
+                {
+                    return true;
+                }
+                
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private bool ValidateToken(string token)
+        {
             var tokenHandler = new JwtSecurityTokenHandler();
             try
             {
